@@ -1,0 +1,41 @@
+CREATE TABLE public.questions (
+  uuid UUID DEFAULT  uuid_generate_v4() PRIMARY KEY,
+  question TEXT NOT NULL,
+  choice_a TEXT NOT NULL,
+  choice_b TEXT NOT NULL,
+  choice_c TEXT NOT NULL,
+  choice_d TEXT NOT NULL,
+  answer   CHAR(1) NOT NULL
+);
+
+
+CREATE TABLE public.answers (
+  uuid        UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  question_id UUID NOT NULL REFERENCES public.questions(uuid),
+  selected    CHAR(1) NOT NULL,
+  is_correct  BOOLEAN NOT NULL,
+  created_at  TIMESTAMP DEFAULT NOW()
+);
+
+
+INSERT INTO public.questions (question, choice_a, choice_b, choice_c, choice_d, answer) VALUES
+('What does S3 stand for?', 'Simple Storage Service', 'Secure Server Storage', 'Scalable Static Storage', 'Simple Streaming Service', 'A'),
+('Which AWS service is a managed relational database?', 'DynamoDB', 'ElastiCache', 'RDS', 'Redshift', 'C'),
+('What is the maximum size of a single object stored in S3?', '5 GB', '50 GB', '5 TB', '1 TB', 'C'),
+('Which AWS service lets you run code without provisioning servers?', 'EC2', 'ECS', 'Lambda', 'Lightsail', 'C'),
+('What does IAM stand for?', 'Internet Access Management', 'Identity and Access Management', 'Internal Application Manager', 'Integrated API Module', 'B'),
+('Which service is used to distribute content globally with low latency?', 'Route 53', 'CloudFront', 'API Gateway', 'Global Accelerator', 'B'),
+('What type of database is DynamoDB?', 'Relational', 'Graph', 'Document/NoSQL key-value', 'Time-series', 'C'),
+('Which AWS service translates domain names to IP addresses?', 'VPC', 'CloudFront', 'Route 53', 'Direct Connect', 'C'),
+('What is the default visibility timeout for an SQS message?', '15 seconds', '30 seconds', '60 seconds', '12 hours', 'B'),
+('Which service provides a fully managed message broker (pub/sub)?', 'SQS', 'SNS', 'EventBridge', 'Kinesis', 'B'),
+('What does EC2 stand for?', 'Elastic Cache Cluster', 'Elastic Compute Cloud', 'Enterprise Container Cloud', 'Encrypted Container Cluster', 'B'),
+('Which storage class is cheapest for infrequently accessed S3 data?', 'S3 Standard', 'S3 Intelligent-Tiering', 'S3 Glacier Deep Archive', 'S3 One Zone-IA', 'C'),
+('What is the maximum execution timeout for a Lambda function?', '5 minutes', '10 minutes', '15 minutes', '30 minutes', 'C'),
+('Which AWS service is used to create and manage REST APIs?', 'CloudFormation', 'Elastic Beanstalk', 'API Gateway', 'AppSync', 'C'),
+('What is an Availability Zone?', 'A geographic region', 'An isolated data center or group of data centers within a region', 'A CDN edge location', 'A VPC subnet', 'B'),
+('Which service deploys and manages containerized applications using Docker?', 'EC2', 'Elastic Beanstalk', 'ECS', 'Lambda', 'C'),
+('What does the AWS Shared Responsibility Model mean?', 'AWS is responsible for everything', 'The customer is responsible for everything', 'AWS manages the cloud infrastructure; the customer manages security IN the cloud', 'Security is handled by a third-party vendor', 'C'),
+('Which AWS service provides a virtual private network in the cloud?', 'Direct Connect', 'VPC', 'Transit Gateway', 'CloudHSM', 'B'),
+('What does SQS stand for?', 'Simple Queue Service', 'Secure Query System', 'Scalable Queue Storage', 'Server Query Service', 'A'),
+('Which AWS tool lets you model and provision infrastructure as code?', 'CodeDeploy', 'CloudWatch', 'CloudFormation', 'Systems Manager', 'C');
