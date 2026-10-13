@@ -2,7 +2,7 @@ This is a small web app questionnaire built to be deployed on AWS
 
 # Start server
 ```
-PORT=4567 npm run start
+DATABASE_URL="postgresql://postgres:password@localhost:5432/study-sync" PORT=4567 npm start
 ```
 
 # Installing PostgreSQL Client
