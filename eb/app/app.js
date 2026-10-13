@@ -1,4 +1,14 @@
 var Data = {
+  current_question: function () {
+    var question = null;
+    for (var i = 0; i < Data.questions.list.length; i++) {
+      if (Data.question_index === Data.questions.list[i].uuid) {
+        question = Data.questions.list[i]
+        break;
+      }
+    }
+  },
+
   question_index: null,
   questions: {
     list: [],
@@ -9,7 +19,7 @@ var Data = {
       })
         .then(function (data) {
           Data.questions.list = data.questions
-          Data.questions.questions_list = data.question_index
+          Data.question_index = data.question_index
         })
     }
   }
@@ -40,6 +50,19 @@ var Choice = {
   }
 }
 
+Question = {
+  view: function (vnode) {
+    if (Data.current_question() === null) { return false }
+    m('.question_wrapper', [
+      m('.question', data.question),
+      m(Choice, { index: 0 }),
+      m(Choice, { index: 1 }),
+      m(Choice, { index: 2 }),
+      m(Choice, { index: 3 })
+    ])
+  }
+}
+
 var App = {
   oninit: Data.questions.fetch(),
   submit: function () {
@@ -54,14 +77,10 @@ var App = {
   },
   view: function () {
     return m('main', [
-      m("h1", data.title),
+      m("h1", 'Study Sync'),
       m('article',
         m('h2', 'Question:'),
-        m('.question', data.question),
-        m(Choice, { index: 0 }),
-        m(Choice, { index: 1 }),
-        m(Choice, { index: 2 }),
-        m(Choice, { index: 3 }),
+        m(Question),
         m('.submit',
           m("button", { onclick: App.submit }, 'Submit')
         )
