@@ -1,14 +1,4 @@
 var Data = {
-  current_question: function () {
-    var question = null;
-    for (var i = 0; i < Data.questions.list.length; i++) {
-      if (Data.question_index === Data.questions.list[i].uuid) {
-        question = Data.questions.list[i]
-        break;
-      }
-    }
-  },
-
   question_index: null,
   questions: {
     list: [],
@@ -19,7 +9,7 @@ var Data = {
       })
         .then(function (data) {
           Data.questions.list = data.questions
-          Data.question_index = data.question_index
+          Data.questions.questions_list = data.question_index
         })
     }
   }
@@ -28,11 +18,11 @@ var Data = {
 var Choice = {
   click: function (n) {
     return function () {
-      data.selected = n
+      Data.selected = n
     }
   },
   classes: function (n) {
-    if (data.selected === n) {
+    if (Data.selected === n) {
       return 'active'
     } else {
       return ''
@@ -45,21 +35,8 @@ var Choice = {
       onclick: Choice.click(n)
     },
       m('span.l'),
-      m('span.v', data.choices[n])
+      m('span.v', Data.choices[n])
     )
-  }
-}
-
-Question = {
-  view: function (vnode) {
-    if (Data.current_question() === null) { return false }
-    m('.question_wrapper', [
-      m('.question', data.question),
-      m(Choice, { index: 0 }),
-      m(Choice, { index: 1 }),
-      m(Choice, { index: 2 }),
-      m(Choice, { index: 3 })
-    ])
   }
 }
 
@@ -69,18 +46,24 @@ var App = {
     m.request({
       method: "PUT",
       url: "/submit",
-      params: { selected: data.selected },
+      params: { selected: Data.selected },
     })
       .then(function (data) {
         console.log('data', data)
+        Data.question_index = data.question_index
       })
   },
   view: function () {
+    var q = Data.questions.list[Data.question_index]
     return m('main', [
-      m("h1", 'Study Sync'),
+      m("h1", q ? q.title : 'Loading...'),
       m('article',
         m('h2', 'Question:'),
-        m(Question),
+        m('.question', q ? q.question : ''),
+        m(Choice, { index: 0 }),
+        m(Choice, { index: 1 }),
+        m(Choice, { index: 2 }),
+        m(Choice, { index: 3 }),
         m('.submit',
           m("button", { onclick: App.submit }, 'Submit')
         )
@@ -88,5 +71,3 @@ var App = {
     ])
   }
 }
-
-m.mount(document.body, App)

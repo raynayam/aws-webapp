@@ -50,6 +50,28 @@ app.get('/questions', async function (req, res) {
 });
 
 app.put('/submit', function (req, res) {
+  try {
+    const result = await client.query(`
+      SELECT
+        (
+          SELECT
+             questions.uuid
+          FROM questions
+          WHERE
+            questions.uuid NOT IN (
+              SELECT question_id FROM answers
+            )
+          LIMIT 1
+        ) as question_index,
+         (SELECT COALESCE(array_to_json(array_agg(row_to_json(array_row))),'[]'::json) FROM (
+          SELECT * FROM questions
+        ) array_row) as questions;
+      `);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.log(err)
+    res.status(500).send('Error fetching questions');
+  }
   console.log(req.body)
 });
 
